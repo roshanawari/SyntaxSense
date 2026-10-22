@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Answer - SyntaxSense{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="margin-bottom: 0.25rem;">Analysis & Debugging Answer</h1>
+    <p class="text-sm text-muted" style="margin: 0;" id="q-meta">
+      Created: {{ question.created_at|date:"M d, Y H:i" }}
+    </p>
+  </div>
+  <div style="display: flex; gap: 0.5rem;">
+    <a href="/" class="btn btn-primary btn-sm">Ask another</a>
+    <a href="/questions" class="btn btn-secondary btn-sm">History</a>
+  </div>
+</div>
+
+<div id="answer-loading" class="state-box">
+  <p class="text-muted">Loading answer and citations…</p>
+</div>
+
+<div id="answer-container" style="display: none;">
+  <!-- Evidence Notice Banner -->
+  <div id="evidence-banner" style="margin-bottom: 1.5rem;"></div>
+
+  <div class="answer-layout">
+    <!-- Left Column: Answer (Explanation, Bugs, Fixes) -->
+    <div class="answer-main">
+      <!-- Submitted Code & Question Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header" style="margin-bottom: 0.5rem;">
+          <h2 style="font-size: 1.1rem; margin: 0;">Submitted Code & Question</h2>
+          <span class="badge badge-info" id="q-lang"></span>
+        </div>
+        <p style="font-weight: 500; margin-bottom: 0.75rem;" id="q-text"></p>
+        <div class="code-container" style="margin: 0; max-height: 250px; overflow-y: auto;" id="q-code-container">
+          <pre style="margin: 0; padding: 0.75rem;"><code id="q-code"></code></pre>
+        </div>
+      </div>
+
+      <!-- Explanation Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Explanation</h2>
+        <div id="explanation-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+      </div>
+
+      <!-- Possible Bugs Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Possible Bugs</h2>
+        <div id="bugs-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+      </div>
+
+      <!-- Suggested Fixes Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1rem;">Suggested Fixes</h2>
+        <div id="fixes-list" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+      </div>
+    </div>
+
+    <!-- Right Column: Retrieved Chunks Panel -->
+    <div class="answer-sidebar">
+      <div class="card" style="position: sticky; top: 4.5rem; max-height: calc(100vh - 6rem); overflow-y: auto; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.05rem; margin: 0;">Retrieved Evidence</h3>
+          <span class="badge badge-info" id="chunks-count-badge">0 chunks</span>
+        </div>
+        <p class="text-sm text-muted" style="margin-bottom: 1rem;">
+          Passages retrieved from your sources and sent to Gemini. Click citations in the answer to inspect matching chunks.
+        </p>
+        <div id="retrieved-chunks-list" style="display: flex; flex-direction: column; gap: 0.85rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const QUESTION_ID = {{ question.id }};
+</script>
+<script src="{% static 'js/question_detail.js' %}"></script>
+{% endblock %}

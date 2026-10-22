@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Knowledge Sources - SyntaxSense{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+  <div>
+    <h1 style="margin-bottom: 0.25rem;">Knowledge Sources</h1>
+    <p class="text-muted" style="margin: 0;">Add and manage reference documents, code files, or GitHub repositories.</p>
+  </div>
+  <a href="/sources/new" class="btn btn-primary" id="btn-add-source">+ Add source</a>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+  <div id="sources-container">
+    {% if sources %}
+      <div class="table-responsive">
+        <table class="table" id="sources-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Files</th>
+              <th>Chunks</th>
+              <th>Created</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="sources-tbody">
+            {% for source in sources %}
+              <tr id="source-row-{{ source.id }}">
+                <td>
+                  <a href="/sources/{{ source.id }}" class="font-bold" style="font-weight: 600;" id="source-link-{{ source.id }}">
+                    {{ source.name }}
+                  </a>
+                  {% if source.kind == 'GITHUB' and source.origin_url %}
+                    <div class="text-sm text-muted">{{ source.origin_url }}</div>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="badge badge-info">{{ source.kind }}</span>
+                </td>
+                <td>
+                  <span class="badge badge-{{ source.status|lower }}">{{ source.status }}</span>
+                  {% if source.error_message %}
+                    <div class="text-sm text-muted" style="color: var(--error);">{{ source.error_message }}</div>
+                  {% endif %}
+                </td>
+                <td>{{ source.file_count }}</td>
+                <td>{{ source.chunk_count }}</td>
+                <td class="text-muted text-sm source-created" data-utc="{{ source.created_at|date:'c' }}">
+                  {{ source.created_at|date:"M d, Y H:i" }}
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-danger-outline btn-sm btn-delete-source" data-id="{{ source.id }}" data-name="{{ source.name }}">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="state-box state-empty" id="sources-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.75rem; color: var(--text-muted);">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <p style="font-weight: 500; margin-bottom: 0.25rem;">No sources yet</p>
+        <p class="text-sm text-muted" style="margin-bottom: 1rem;">Add text, documents or a GitHub repository to ground your AI answers.</p>
+        <a href="/sources/new" class="btn btn-primary btn-sm">Add a source</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirm-modal" class="modal-backdrop" style="display: none;">
+  <div class="modal-content">
+    <h3 style="margin-bottom: 0.5rem;">Delete Source</h3>
+    <p class="text-muted" id="modal-desc">Are you sure you want to delete this source? All associated files and chunks will be removed.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="modal-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="modal-confirm">Delete</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/sources.js' %}"></script>
+{% endblock %}

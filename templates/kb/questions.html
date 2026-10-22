@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Question History - SyntaxSense{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+  <div>
+    <h1 style="margin-bottom: 0.25rem;">Question History</h1>
+    <p class="text-muted" style="margin: 0;">Review your past debugging queries, explanations, and evidence citations.</p>
+  </div>
+  <a href="/" class="btn btn-primary" id="btn-ask-history">+ Ask a question</a>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+  <div id="history-container">
+    {% if questions %}
+      <div class="table-responsive">
+        <table class="table" id="history-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Question / Summary</th>
+              <th>Language</th>
+              <th>Evidence Status</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            {% for q in questions %}
+              <tr id="question-row-{{ q.id }}">
+                <td class="text-muted text-sm question-time" data-utc="{{ q.created_at|date:'c' }}">
+                  {{ q.created_at|date:"M d, Y H:i" }}
+                </td>
+                <td>
+                  <a href="/questions/{{ q.id }}" style="font-weight: 600;" id="question-link-{{ q.id }}">
+                    {{ q.question_text|truncatechars:70|default:"(Code analysis without question text)" }}
+                  </a>
+                </td>
+                <td>
+                  {% if q.language %}
+                    <span class="badge badge-info" style="font-size: 0.7rem;">{{ q.language }}</span>
+                  {% else %}
+                    <span class="text-muted text-sm">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if q.evidence_status == 'SUFFICIENT' %}
+                    <span class="badge badge-ready">Sufficient Evidence</span>
+                  {% elif q.evidence_status == 'INSUFFICIENT' %}
+                    <span class="badge badge-failed">Insufficient Evidence</span>
+                  {% else %}
+                    <span class="badge badge-pending">No Sources</span>
+                  {% endif %}
+                </td>
+                <td style="text-align: right;">
+                  <a href="/questions/{{ q.id }}" class="btn btn-secondary btn-sm">View Answer</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="state-box state-empty" id="history-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.75rem; color: var(--text-muted);">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 14 14"></polyline>
+        </svg>
+        <p style="font-weight: 500; margin-bottom: 0.25rem;">No questions yet</p>
+        <p class="text-sm text-muted" style="margin-bottom: 1rem;">Ask your first coding question to view answers and citation history here.</p>
+        <a href="/" class="btn btn-primary btn-sm">Ask question</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/questions.js' %}"></script>
+{% endblock %}

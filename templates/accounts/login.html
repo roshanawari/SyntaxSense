@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log in - SyntaxSense{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="card">
+    <div class="card-header" style="margin-bottom: 1.5rem;">
+      <h1 class="card-title" style="font-size: 1.5rem; margin-bottom: 0;">Log in to SyntaxSense</h1>
+    </div>
+
+    <div id="login-error" class="state-error" style="display: none;"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" id="email" class="form-input" required autocomplete="email" placeholder="student@example.com">
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-input" required placeholder="Your password">
+      </div>
+
+      <div style="margin-top: 1.5rem; margin-bottom: 1rem;">
+        <button type="submit" class="btn btn-primary" id="btn-login" style="width: 100%;">Log in</button>
+      </div>
+
+      <p class="text-sm text-muted" style="text-align: center; margin: 0;">
+        Don't have an account? <a href="/register" id="link-register">Create account</a>
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/login.js' %}"></script>
+{% endblock %}

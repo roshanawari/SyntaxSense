@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Knowledge Source - SyntaxSense{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <h1>Add Knowledge Source</h1>
+    <p class="text-muted">Choose whether to paste plain text, upload a document (PDF, DOCX, TXT), or link a public GitHub repository.</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button type="button" class="tab-btn active" data-tab="tab-text" id="tab-btn-text">Paste Text</button>
+      <button type="button" class="tab-btn" data-tab="tab-file" id="tab-btn-file">Upload File</button>
+      <button type="button" class="tab-btn" data-tab="tab-github" id="tab-btn-github">GitHub Repo</button>
+    </div>
+
+    <div id="source-error" class="state-error" style="display: none;"></div>
+
+    <!-- Tab 1: Paste Text -->
+    <div class="tab-pane active" id="tab-text">
+      <form id="form-add-text">
+        <div class="form-group">
+          <label for="text-name" class="form-label">Source Name</label>
+          <input type="text" id="text-name" class="form-input" required placeholder="e.g. Python Dict Notes" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="text-content" class="form-label">Content (up to 100,000 characters)</label>
+          <textarea id="text-content" class="form-input form-textarea" required placeholder="Paste reference documentation or notes here..." style="min-height: 200px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn-submit-text">Add text source</button>
+      </form>
+    </div>
+
+    <!-- Tab 2: Upload File -->
+    <div class="tab-pane" id="tab-file">
+      <form id="form-add-file" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="file-upload" class="form-label">Select Document (PDF, DOCX, TXT - max 5 MB)</label>
+          <input type="file" id="file-upload" class="form-input" required accept=".pdf,.docx,.txt">
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn-submit-file">Upload and process</button>
+      </form>
+    </div>
+
+    <!-- Tab 3: GitHub Repo -->
+    <div class="tab-pane" id="tab-github">
+      <form id="form-add-github">
+        <div class="form-group">
+          <label for="github-url" class="form-label">Public GitHub Repository Link</label>
+          <input type="url" id="github-url" class="form-input" required placeholder="https://github.com/owner/repo">
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn-submit-github">Import repository</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/source_new.js' %}"></script>
+{% endblock %}

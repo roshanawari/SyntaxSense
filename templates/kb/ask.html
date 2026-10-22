@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ask - SyntaxSense{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <h1>Explain & Debug Code</h1>
+    <p class="text-muted">Submit your code and question to get an evidence-grounded answer cited from your knowledge sources.</p>
+  </div>
+
+  <div class="card">
+    <div id="ask-error-box" class="state-error" style="display: none;"></div>
+
+    <div id="ask-sources-notice" class="state-box state-warning" style="display: none; padding: 1rem; text-align: left; margin-top: 0;">
+      <p style="margin: 0; font-weight: 500;">No sources ready yet. <a href="/sources/new" class="btn btn-primary btn-sm" style="margin-left: 0.5rem;">Add a source first</a></p>
+    </div>
+
+    <form id="ask-form">
+      <div class="form-group">
+        <label for="code-input" class="form-label">Code snippet (up to 20,000 characters)</label>
+        <textarea id="code-input" class="form-input form-textarea font-mono" placeholder="# Paste your code here..." style="min-height: 180px;"></textarea>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 200px; gap: 1rem;">
+        <div class="form-group">
+          <label for="question-input" class="form-label">Your question or error (up to 2,000 characters)</label>
+          <input type="text" id="question-input" class="form-input" placeholder="e.g. Why am I getting a KeyError on line 12?">
+        </div>
+        <div class="form-group">
+          <label for="language-select" class="form-label">Language (optional)</label>
+          <select id="language-select" class="form-select">
+            <option value="">Auto / Any</option>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="java">Java</option>
+            <option value="cpp">C / C++</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Grounding sources</label>
+        <div id="sources-checkboxes" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto; padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg);">
+          <span class="text-muted text-sm">Loading ready sources…</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <button type="submit" class="btn btn-primary" id="btn-submit-ask" style="width: 100%;">
+          Ask Assistant
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/ask.js' %}"></script>
+{% endblock %}
